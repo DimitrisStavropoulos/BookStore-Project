@@ -1,0 +1,39 @@
+﻿18/1/2021 - Chatzidakis
+
+General
+
+Admin : UN: admin@store.com
+		PASS: Adm1n@store.com
+
+In BookController
+
+1) Edit [Post] gets a BookEditViewModel
+-same as BookViewModel without SelectList(Author/Genre/Publisher)
+-these are populated by method PopulateAllDropDownLists 
+-edit brings preselected values for dropdowns during Create action
+-Create [post] gets a BookViewModel as before.
+-Made tests with Create then Edit. No Bind problems whatsoever. 
+Everything looks ok in browser and database. 
+-We could use just one viewmodel for create and edit but there are other things to worry about
+ so we'll leave it as it is.
+2) In Book Views FORGET ABOUT PARTIAL VIEWS. We will not use them. 
+3) Q:Savvas (Book Index view). Why do I see .First() is it necessary?  
+4) Leave Book Delete Action/Views as they are for the moment, using a Book Model.
+5) Todo IF we have time, ONLY AFTER we do the important stuff:
+  Smaller stuff: sort order needs to start from book title alphabetically, after that whatever you want
+			   : combined book index filtering by genre/author, it's tricky so we' ll leave for last.
+			   : see if you can get rid of genreId,PublisherId,AuthorId tags in create/edit view.
+			    (it's because we are passing select lists through viewmodels)
+6) Q:Dimitris: Why did we leave out Routes in RouteConfig?
+7) Enter USERS only by hand with password abc123!@# for ease.
+8)Never delete the migrations. If you have to modify my books make sure you run migrations afterwards to 
+ bring synthetic data to its proper form. We have't any data annotations yet so I chose the seed carefully.
+9)The only thing inside local db when we pass the project to each other will be my seed, and users that 
+ you will add by hand. If you add books/authors/genres/publishers for testing purposes, 
+ you will DELETE them ALL before passing the project to the next person. ALLIWS GINOMASTE MPOYRDELO.
+10) I tried to do something novel with Shop by navbar. DO NOT CHANGE ANYTHING. It's not working
+   as i'd like to but it's good enough. So we're moving on to basket/orders.
+
+
+1) olo to action toy Index apo ta books controller
+2) olo to index view toy book 

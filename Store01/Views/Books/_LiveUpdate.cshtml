@@ -1,0 +1,205 @@
+﻿@model Store01.ViewModels.BookIndexViewModel
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Book Catalog";
+}
+
+<h2 id="title">@ViewBag.Title</h2>
+
+@if (Request.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+<p>
+    @using (Html.BeginForm("Index", "Books", FormMethod.Get, new { @class = "myform" }))
+    {
+
+        <label>Filter by Genre:</label>
+        @Html.DropDownListFor(vm => vm.Genre, Model.GenreFilterItems, "All")
+
+
+        <label>Sort by:</label>
+        @Html.DropDownListFor(vm => vm.SortBy, new SelectList(Model.Sorts, "Value", "Key"),
+        "Default")
+        <input type="submit" value="Filter" />
+        <input type="hidden" name="Search" id="Search" value="@Model.Search" />
+    }
+</p>
+@if (!(User.IsInRole("Admin")))
+{
+    foreach (var item in Model.Books)
+    {
+
+        <div class="container page-wrapper">
+                <div class="page-inner">
+                    <div class="row" id="prod">
+                        <div class="el-wrapper">
+
+                            <div class="box-up">
+                                <a href="@Url.Action("Details", new { id = item.Id })">
+                                    <img class="img" src="@(Url.Content(Constants.BookImagePath) + item.BookImageMappings.OrderBy(pim =>
+                                pim.ImageNumber).ElementAt(0).BookImage.FileName)" alt="">
+                                </a>
+                                <div class="img-info">
+                                    <div class="info-inner">
+                                        <span class="p-name">@Html.DisplayFor(modelItem => item.Title)</span><br /> 
+                                        <span class="p-company" style="color:black">@Html.DisplayFor(modelItem => item.Author.FullName)</span>
+                                    </div>
+                                    <div class="a-size"> Publisher <span class="size">@Html.DisplayFor(modelItem => item.Publisher.Name)</span></div>
+                                    <div class="b-size"> Genre <span class="size" style="color:black">@Html.DisplayFor(modelItem => item.Genre.Title)</span></div>
+                                </div>
+                            </div>
+
+
+                            <div class="box-down">
+                                <div class="h-bg">
+                                    <div class="h-bg-inner">
+                                        <a class="cart" href="@Url.Action("Details", new { id = item.Id })">
+                                            <span class="price" style="color:aliceblue;">@Html.DisplayFor(modelItem => item.Price) - More Details  </span>
+                                            <span class="add-to-cart">
+                                                <span class="txt"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    }
+}
+@if (Request.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Author.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Publisher.Name)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Books.First().Code)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.First().Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.First().Isbn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.First().ReleaseDate)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Pages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books.First().Availability)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Books)
+        {
+            <tr>
+                <td>
+                    @if (item.BookImageMappings != null && item.BookImageMappings.Any())
+                    {
+                        <a href="@Url.Action("Details", new { id = item.Id})">
+                            <img src="@(Url.Content(Constants.BookImagePath) + item.BookImageMappings.OrderBy(pim =>
+                              pim.ImageNumber).ElementAt(0).BookImage.FileName)">
+                        </a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher.Name)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Isbn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pages)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Availability)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+<div style="text-align:center;">
+    Page @(Model.Books.PageCount < Model.Books.PageNumber ? 0 :
+    Model.Books.PageNumber) of @Model.Books.PageCount
+    @Html.PagedListPager(Model.Books, page => Url.Action("Index",
+        new
+            {
+                genre = @Model.Genre,
+                author = @Model.Author,
+                publisher = @Model.Publisher,
+                Search = @Model.Search,
+                sortBy = @Model.SortBy,
+                page
+            }))
+</div>
+
+
+<style>
+
+    .myform {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #title {
+        text-align: center;
+    }
+</style>

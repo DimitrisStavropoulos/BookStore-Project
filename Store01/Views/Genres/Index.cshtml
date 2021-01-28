@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Store01.Models.Genre>
+
+@{
+    ViewBag.Title = "Genre";
+}
+
+
+<div>
+    <h2 id="titlos">@ViewBag.Title</h2>
+
+
+    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+    <table class="table">
+       
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Title, "Index", "Books", new { genre = item.Title }, null)
+                </td>
+                <td>
+
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<style>
+   .table{
+        width: 40vh;
+        margin: auto;
+        text-align: center;
+    }
+    body, html {
+
+        height: 100%;
+        text-align:center;
+    }
+</style>

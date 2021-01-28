@@ -1,0 +1,92 @@
+﻿@model Store01.Models.Book
+
+@{
+    ViewBag.Title = "Book Details";
+}
+@section css {
+    <link href="@Url.Content("~/content/details.css")" rel="stylesheet" />
+}
+
+
+<h2>Details</h2>
+
+<body id="homepage">
+    <header>
+        <a class="menu"><div class="menu-button"></div></a>
+        <div>
+            <h1>@Html.DisplayFor(model => model.Title)</h1>
+            <h2>@Html.DisplayFor(model => model.Author.FullName)</h2>
+        </div>
+    </header>
+
+    
+        <main id="home">
+            <blockquote style="width:250px; margin:0; padding:0; border-left-width:0px;" > <div class="cover">
+                <img src="@(Url.Content(Constants.BookImagePath) + Model.BookImageMappings.OrderBy(pim =>
+                         pim.ImageNumber).ElementAt(0).BookImage.FileName)">
+                 </div>
+            </blockquote>
+            
+            <blockquote style="margin:0; padding: 0; border-left-width:0px;">
+                @Html.DisplayNameFor(model => model.Code) :
+                @Html.DisplayFor(model => model.Code)
+                <hr />
+                Genre :
+                @Html.DisplayFor(model => model.Genre.Title)
+                <hr />
+                Availability : @Html.DisplayFor(model => model.Availability)
+                <hr />
+                Released: @Html.DisplayFor(model => model.ReleaseDate)
+                <hr />
+                Pages : @Html.DisplayFor(model => model.Pages)
+            </blockquote>
+
+            <blockquote style="width:500px; border-left-width:0px;">
+                @Html.DisplayNameFor(model => model.Description)
+                <hr />
+                @Html.DisplayFor(model => model.Description)
+            </blockquote>
+
+            <blockquote>
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    if (Model.BookImageMappings != null && Model.BookImageMappings.Any())
+                    {
+
+                        foreach (var item in Model.BookImageMappings.OrderBy(pim => pim.ImageNumber))
+                        {
+                            <a href="@(Url.Content(Constants.BookImagePath) + item.BookImage.FileName)">
+                                <img src="@(Url.Content(Constants.BookThumbnailPath) +item.BookImage.FileName)" style=padding:5px>
+                            </a>
+                        }
+
+                    }
+                }
+            </blockquote>
+
+            <blockquote style="width:150px; text-align:center; border-left-width:0px;">
+                @if (!User.IsInRole("Admin") && !(Model.Availability == Store01.Enums.Availability.Unavailable))
+                {
+
+                    using (Html.BeginForm("AddToBasket", "Basket"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+                        <input type="submit" class="btn btn-primary btn-xs" value="Add to Cart">
+                        @Html.DropDownList("quantity", Enumerable.Range(1, 100)
+                            .Select(i => new SelectListItem { Text = i.ToString(), Value = i.ToString() }))
+
+                    }
+                }
+            </blockquote>
+            <blockquote style="border-left-width: 0px;">
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+                    @Html.Raw(" | ")
+                }
+                @Html.ActionLink("Back to List", "Index")
+            </blockquote>
+        </main>  
+</body>
+

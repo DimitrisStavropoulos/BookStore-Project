@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Store01.Models.Author>
+
+@{
+    ViewBag.Title = "Authors";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+    @if(Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+   
+
+<table class="table">
+  
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.FullName, "Index", "Books", new { author = item.FullName }, null)
+        </td>
+ 
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = item.Id })
+            @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                @Html.Raw(" | ")
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @Html.Raw(" | ")
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            }
+        </td>
+    </tr>
+}
+
+</table>
+
+<style>
+    .table {
+        width: 40vh;
+        margin: auto;
+        text-align: center;
+    }
+
+    body, html {
+        height: 100%;
+        text-align: center;
+    }
+</style>

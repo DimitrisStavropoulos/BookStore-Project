@@ -1,0 +1,46 @@
+﻿@model Store01.Models.Author
+
+@{
+    ViewBag.Title = "Details";
+}
+@section css {
+    <link href="@Url.Content("~/content/details.css")" rel="stylesheet" />
+}
+<h2>Details</h2>
+<body id="homepage">
+    <main id="home">
+        <blockquote style="width:500px;">
+            @Html.DisplayFor(model => model.FullName)
+            <hr />
+            @Html.DisplayNameFor(model => model.AboutInfo)
+            <hr />
+            @Html.DisplayFor(model => model.AboutInfo)
+        </blockquote>
+    </main>
+</body>
+    @*<div>
+            <h4>Author</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FullName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AboutInfo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AboutInfo)
+                </dd>
+
+            </dl>
+        </div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>*@

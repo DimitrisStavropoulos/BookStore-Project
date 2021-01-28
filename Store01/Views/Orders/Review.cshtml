@@ -1,0 +1,86 @@
+﻿@model Store01.Models.Order
+
+@{
+    ViewBag.Title = "Review Your Order";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Create", "Orders"))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Order</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row">
+        <div class="col-md-2"><label>Book</label></div>
+        <div class="col-md-2"><label>Quantity</label></div>
+        <div class="col-md-2"><label>Price</label></div>
+    </div>
+
+    @foreach (var item in Model.OrderLines)
+    {
+        <div class="row">
+            <div class="col-md-2">@Html.DisplayFor(modelItem => item.Book.Title)</div>
+            <div class="col-md-2">@Html.DisplayFor(modelItem => item.Quantity)</div>
+            <div class="col-md-2">@Html.DisplayFor(modelItem => item.UnitPrice)</div>
+        </div>
+    }
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TotalPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 form-control-static">
+            @Html.DisplayFor(model => Model.TotalPrice)
+            @Html.HiddenFor(model => Model.TotalPrice)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 form-control-static">
+            @Html.DisplayFor(model => Model.UserID)
+            @Html.HiddenFor(model => Model.UserID)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DeliveryName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DeliveryName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DeliveryName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @Html.EditorFor(model => model.DeliveryAddress)
+
+    @*<div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>*@
+
+    <form action="/Home/Charge" method="POST">
+        <article>
+            <label>Amount:@Model.TotalPrice</label>
+        </article>
+        <script src="//checkout.stripe.com/v2/checkout.js"
+                class="stripe-button"
+                data-key="pk_test_51IBkDtCJuzxdYhOtyq9CXeZq4YYCXwlntkpwWloLKsmRJ9RiTKMW0UWriwsfbk1mFIK7IklimZQuDDkQTc2fvfdr00jHEdU28M"
+                data-locale="auto"
+                data-description="Sample Charge"               
+                data-amount=" @(Model.TotalPrice*100)">
+        </script>
+    </form>
+
+</div>
+}
+
+<div>
+    @Html.ActionLink("Edit Cart", "Index", "Basket")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

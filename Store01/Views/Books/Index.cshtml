@@ -1,0 +1,49 @@
+﻿@model Store01.ViewModels.LiveBookIndexViewModel
+@{
+    ViewBag.Title = "Books Details";
+}
+
+
+<div id="dataModel"></div>
+
+@section JavaScript{
+    <script src="~/Scripts/jQuery/jquery-2.2.4.min.js"></script>
+    <script src="~/Scripts/jQuery/jquery-2.2.4.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            var hubNotify = $.connection.booksHub;
+
+            $.connection.hub.start().done(function () {
+                getAll();
+            });
+
+            hubNotify.client.refreshBooksData = function () {
+                getAll();
+            };
+        });
+
+        function getAll() {
+            var data = @Html.Raw(Json.Encode(Model));
+            var model = $('#dataModel');
+            $.ajax({
+                url: '/Books/GetBooksData?genre=' + data.genre +
+                    '&author=' + data.author +
+                    '&publisher=' + data.publisher +
+                    '&search=' + data.search +
+                    '&sortBy=' + data.sortBy +
+                    '&page=' + data.page 
+                    ,
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    //console.log(data);
+                    model.empty().append(result);
+                }
+            });
+        }
+    </script>
+}

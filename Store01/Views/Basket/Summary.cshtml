@@ -1,0 +1,16 @@
+﻿@model Store01.ViewModels.BasketSummaryViewModel
+
+@*@{
+        ViewBag.Title = "Summary";
+    }
+
+    <h2>Summary</h2>*@
+
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        @Html.ActionLink("Your cart: " + Model.NumberOfItems + " items(s) " +
+        HttpUtility.HtmlDecode(Html.DisplayFor(model => Model.TotalCost).ToString()),
+        "Index", "Basket")
+    </li>
+</ul>
+
